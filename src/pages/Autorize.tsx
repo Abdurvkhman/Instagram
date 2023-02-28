@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Insta from '../images/instagram.png'
-import { autorize } from '../reducers/user/autorization/autorizationAction'
-import {Link} from 'react-router-dom'
+import { autorization } from '../reducers/user/autorization/autorizationAction'
+import { Link } from 'react-router-dom'
 import { useAppDispatch } from '../hooks/hook'
 
 const Autorize: React.FC = () => {
@@ -16,9 +16,9 @@ const Autorize: React.FC = () => {
          setPassword(event.target.value)
     }
     const handleClick = () => {
-        dispatch(autorize({username, password}))
+        dispatch(autorization({username, password}))
     }
-    
+
     return (
         <div className="autorize-wrapper">
             <img src={Insta} alt="error" />

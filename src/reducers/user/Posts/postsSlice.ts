@@ -4,16 +4,18 @@ import { getPosts } from "./postsAction";
 
 
 const initialState: postsState = {
-    posts: [],
-}
+    posts: []
+} 
 
-export const getPostsSlice = createSlice({
+export const postsSlice = createSlice({
     name: 'posts',
     initialState,
     reducers: {},
-    extraReducers: (builder) => {
+    extraReducers(builder) {
         builder.addCase(getPosts.fulfilled, (state, action: PayloadAction<IPosts[]>) => {
             state.posts = action.payload
         })
-    }
+    },
 })
+
+export default postsSlice.reducer

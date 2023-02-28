@@ -1,12 +1,12 @@
 export interface IAutorization {
-    token: string,
+    avatar: string
+    token?: string,
     username: string,
     _id: string,
-    avatar: string
+    
 }
 
-export type autorizeState = {
-    login?: IAutorization,
-    isAdmin?: boolean,
-    error?: string
+export type autorizationState = {
+    user: IAutorization[],
+    isAdmin: boolean,
 }
