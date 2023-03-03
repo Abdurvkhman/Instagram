@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IPosts, postsState } from "../../../types/IPosts";
-import { getPosts } from "./postsAction";
+import { addPosts, getPosts } from "./postsAction";
 
 
 const initialState: postsState = {
@@ -14,6 +14,9 @@ export const postsSlice = createSlice({
     extraReducers(builder) {
         builder.addCase(getPosts.fulfilled, (state, action: PayloadAction<IPosts[]>) => {
             state.posts = action.payload
+        });
+        builder.addCase(addPosts.fulfilled, (state, action: PayloadAction<IPosts>) => {
+            state.posts.push(action.payload)
         })
     },
 })

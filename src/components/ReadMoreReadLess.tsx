@@ -2,8 +2,8 @@ import { FC } from "react";
 import { useState } from 'react'
 
 export interface children {
-    children: any,
-    limit: any
+    children: string,
+    limit: number
 }
 
 const ReadMoreReadLess: FC<children> = ({children, limit}) => {
@@ -19,7 +19,7 @@ const ReadMoreReadLess: FC<children> = ({children, limit}) => {
     return (
         <div className="read-more-read-less">
             {isReadMoreShown ? children : children.substr(0, limit)}
-            <button onClick={toggleBtn}>{isReadMoreShown ? 'less' : '...more'}</button>
+            <button onClick={toggleBtn}>{isReadMoreShown ? ' less' : '...more'}</button>
         </div>
     )
 }

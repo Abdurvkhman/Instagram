@@ -16,17 +16,54 @@ import dayjs from 'dayjs'
 import Emoji from '../icons/emojis.png'
 import Emojii from '../icons/emojiis.png'
 import ReadMoreReadLess from '../components/ReadMoreReadLess'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import ModWindow from '../components/ModalWindow'
+import {useState} from 'react'
+import EdAndDelBtns from '../components/EditAndDeleteButtons'
 
 const Home: React.FC = () => {
+    dayjs.extend(relativeTime)
+    
     const dispatch = useAppDispatch()
 
     const {posts} = useAppSelector(state => state.posts)
-    
+
+    const {user} = useAppSelector(state => state.autorize)
+    console.log(user)
     console.log(posts);
+    
+    
+    const [modalActive, setModalActive] = useState(false)
+
+    const [secondModalState, setSecondModalState] = useState(false)
+
+    const [btnState, setBtnState] = useState(false)
+
+    const [changeImg, setChangeImg] = useState(String)
+
+    const [changeDesc, setChangeDesc] = useState('')
+
+    const myPost = user.username
+
+    const userID = user._id
     
     useEffect(() => {
         dispatch(getPosts())
     }, [dispatch])
+
+    const btnHandleClick = () => {
+        setBtnState(true)
+    }
+
+    const getImg = () => {
+        posts.filter(i => {
+            if (i.user._id === userID) {
+                setChangeImg(i.image)
+                setChangeDesc(i.description)
+            }
+        })
+        setSecondModalState(true)
+    }
      
     return (
         <div className="home-wrapper">
@@ -41,7 +78,7 @@ const Home: React.FC = () => {
                 <div className='icons'>
                     <div><img src={HomeActive} alt="error" /></div>
                     <div><img src={MSG} alt="error" /></div>
-                    <div><img src={Add} alt="error" /></div>
+                    <div><img onClick={() => setModalActive(true)} className='add-post' src={Add} alt="error" /></div>
                     <div><img src={Trends} alt="error" /></div>
                     <div><img src={Likes} alt="error" /></div>
                     <div className="profile"></div>
@@ -54,11 +91,16 @@ const Home: React.FC = () => {
                             <div className="posts-header">
                                 <div className="left-items">
                                     <div className='avatar-block'>
-                                        <img className='avatar' src={i.user.avatar} alt="" />
+                                        <img className='avatar' src={i.user.avatar} alt="error" />
                                     </div>
                                     <div className="profile">
                                         <p>{i.user.username}</p>
                                     </div>
+                                </div>
+                                <div className={i.user.username === myPost ? 'right-items': 'right-items-none'}>
+                                    <img className={btnState ? 'dots-none' : 'dots-img'} onClick={btnHandleClick} src={Options} alt="error" />
+                                    <img onClick={() => setBtnState(false)} className={btnState ? 'dots-img' : 'dots-none'} src={Options} alt="error" />
+                                    <EdAndDelBtns setState={setBtnState} state={btnState} get={getImg}/>
                                 </div>
                             </div>
                             <div key={i._id}>
@@ -80,7 +122,7 @@ const Home: React.FC = () => {
                                 <span>{i.user.username}</span>
                                 <ReadMoreReadLess limit={5}>{i.description}</ReadMoreReadLess>
                                 <p className='comments'>See 99 comments</p>
-                                <p className='created'>9 HOURS AGO</p>
+                                <p className='created'>{dayjs(+i.created_at).fromNow()}</p>
                                 <div className="add-comment">
                                     <div>
                                         <img src={Emoji} alt="error" />
@@ -110,7 +152,7 @@ const Home: React.FC = () => {
                         <p>Suggestions for you</p>
                         <p className='second-p'>See all</p>
                     </div>
-                    {posts.map(i => (
+                    {posts.slice(0, 5).map(i => (
                          <div className="follow" key={i._id}>
                            <div className="left-items">
                                 <div><img src={i.user.avatar} alt="error" /></div>
@@ -132,6 +174,7 @@ const Home: React.FC = () => {
                     </div>
                 </div>
             </div>
+            <ModWindow active={modalActive} setActive={setModalActive} secondActive={secondModalState} setSecondActive={setSecondModalState} change={changeImg} changeDesc={changeDesc} setDesc={setChangeDesc}/>
         </div>
     )
 }

@@ -3,7 +3,7 @@ import { IAutorization } from "../../../types/IAutorization";
 import { attachToken, baseService, fillToken } from "../../../baseService";
 import Cookies from "js-cookie";
 
-export const autorization = createAsyncThunk<IAutorization[], {username: string, password: string}>(
+export const autorization = createAsyncThunk<IAutorization, {username: string, password: string}>(
     'autorize',
     async function ({username, password}) {
         const {data} = await baseService.post('/user/sign-in', { username, password })
@@ -13,7 +13,7 @@ export const autorization = createAsyncThunk<IAutorization[], {username: string,
    }
 )
 
-export const checkUser = createAsyncThunk<IAutorization[]>(
+export const checkUser = createAsyncThunk<IAutorization>(
     'check/user',
     async () => {
         const token = Cookies.get('user')

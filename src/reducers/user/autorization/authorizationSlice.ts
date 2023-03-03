@@ -4,7 +4,7 @@ import { autorization, checkUser } from "./autorizationAction";
 
 const initialState: autorizationState = {
     isAdmin: false,
-    user: []
+    user: {} as IAutorization
 }
 
 export const autorizeSlice = createSlice ({
@@ -15,18 +15,16 @@ export const autorizeSlice = createSlice ({
    builder.addCase(autorization.pending, state => {
     state.isAdmin = true
    });
-   builder.addCase(autorization.fulfilled, (state, action: PayloadAction<IAutorization[]>) => {
+   builder.addCase(autorization.fulfilled, (state, action: PayloadAction<IAutorization>) => {
     state.isAdmin = true
-    state.user = action.payload
-    
+    state.user = action.payload    
    });
    builder.addCase(checkUser.pending, state => {
     state.isAdmin = true
    });
-   builder.addCase(checkUser.fulfilled, (state, action: PayloadAction<IAutorization[]>) => {
+   builder.addCase(checkUser.fulfilled, (state, action: PayloadAction<IAutorization>) => {
     state.isAdmin = true
     state.user = action.payload
-    console.log(action.payload);
    });
   } 
 })

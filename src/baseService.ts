@@ -19,6 +19,10 @@ export const logout = (): void => {
     Cookies.remove('user')
 }
 
+// export const addHeader = (fd: any) => {
+//     baseService.defaults.headers.common["Content-Type"];
+// }
+
 export const token = Cookies.get('user')
 
 baseService.interceptors.response.use(

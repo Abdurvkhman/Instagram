@@ -4,9 +4,9 @@ export interface IPosts {
     comments: [],
     image: string,
     user: {
-        avatar: string,
+        _id: string,
         username: string,
-        _id: string
+        avatar: string,
     },
     created_at: string,
     likes: number,

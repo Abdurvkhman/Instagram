@@ -1,1 +1,1 @@
-export const baseURL = 'https://unicode-unigram.onrender.com';
+export const baseURL = 'https://unicode-unigram-xmfu.onrender.com';

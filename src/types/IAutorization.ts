@@ -7,6 +7,6 @@ export interface IAutorization {
 }
 
 export type autorizationState = {
-    user: IAutorization[],
+    user: IAutorization,
     isAdmin: boolean,
 }
