@@ -7,7 +7,7 @@ import Trends from '../icons/trends.png'
 import Likes from '../icons/likes.png'
 import { useAppDispatch, useAppSelector } from '../hooks/hook'
 import { useEffect } from 'react'
-import { getPosts } from '../reducers/user/posts/postsAction'
+import { deletePost, getPosts } from '../reducers/user/posts/postsAction'
 import Options from '../icons/options.png'
 import Comments from '../icons/comments.png'
 import Share from '../icons/share.png'
@@ -29,9 +29,6 @@ const Home: React.FC = () => {
     const {posts} = useAppSelector(state => state.posts)
 
     const {user} = useAppSelector(state => state.autorize)
-    console.log(user)
-    console.log(posts);
-    
     
     const [modalActive, setModalActive] = useState(false)
 
@@ -39,13 +36,11 @@ const Home: React.FC = () => {
 
     const [btnState, setBtnState] = useState(false)
 
-    const [changeImg, setChangeImg] = useState(String)
-
     const [changeDesc, setChangeDesc] = useState('')
 
-    const myPost = user.username
+    const [changeImg, setChangeImg] = useState('')
 
-    const userID = user._id
+    const myPost = user.username
     
     useEffect(() => {
         dispatch(getPosts())
@@ -57,12 +52,16 @@ const Home: React.FC = () => {
 
     const getImg = () => {
         posts.filter(i => {
-            if (i.user._id === userID) {
-                setChangeImg(i.image)
+            if (i.user._id === user._id) {
                 setChangeDesc(i.description)
+                setChangeImg(i.image)
             }
         })
         setSecondModalState(true)
+    }
+
+    const delPost = (_id: string) => {
+        dispatch(deletePost(_id))
     }
      
     return (
@@ -100,7 +99,7 @@ const Home: React.FC = () => {
                                 <div className={i.user.username === myPost ? 'right-items': 'right-items-none'}>
                                     <img className={btnState ? 'dots-none' : 'dots-img'} onClick={btnHandleClick} src={Options} alt="error" />
                                     <img onClick={() => setBtnState(false)} className={btnState ? 'dots-img' : 'dots-none'} src={Options} alt="error" />
-                                    <EdAndDelBtns setState={setBtnState} state={btnState} get={getImg}/>
+                                    <EdAndDelBtns setState={setBtnState} state={btnState} get={getImg} del={delPost}/>
                                 </div>
                             </div>
                             <div key={i._id}>
@@ -174,7 +173,7 @@ const Home: React.FC = () => {
                     </div>
                 </div>
             </div>
-            <ModWindow active={modalActive} setActive={setModalActive} secondActive={secondModalState} setSecondActive={setSecondModalState} change={changeImg} changeDesc={changeDesc} setDesc={setChangeDesc}/>
+            <ModWindow active={modalActive} setActive={setModalActive} secondActive={secondModalState} setSecondActive={setSecondModalState} changeDesc={changeDesc} setDesc={setChangeDesc} changeImg={changeImg} setChangeImg={setChangeImg}/>
         </div>
     )
 }

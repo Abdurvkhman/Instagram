@@ -1,17 +1,24 @@
+import { useAppSelector } from "../hooks/hook"
 
 
 interface btn {
     setState: any,
     state: boolean,
-    get: any
+    get: any,
+    del: any
 }
 
-const EdAndDelBtns: React.FC<btn> = ({state, get}) => {
+const EdAndDelBtns: React.FC<btn> = ({state, get, del}) => {
+    const {posts} = useAppSelector(state => state.posts)
 
     return (
         <div className={state ? 'btns-wrapper' : 'none'}>
-            <button onClick={get} className="first">Edit</button>
-            <button className="first second">Delete</button>
+            {posts.map(i => (
+                <>
+                    <button onClick={() => get(i._id)} className="first">Edit</button>
+                    <button key={i._id} onClick={() => del(i._id)} className="first second">Delete</button>
+                </>
+            ))}
         </div>
     )
 }

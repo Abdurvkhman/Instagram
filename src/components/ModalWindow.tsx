@@ -10,12 +10,14 @@ interface modal {
     setActive: any,
     secondActive: boolean,
     setSecondActive: any,
-    change: string,
     changeDesc: string,
-    setDesc: any
+    setDesc: any,
+    changeImg: string,
+    setChangeImg: any
 }
 
-const ModWindow: React.FC<modal> = ({active, setActive, secondActive, setSecondActive, change, changeDesc, setDesc}) => {
+const ModWindow: React.FC<modal> = ({active, setActive, secondActive, setSecondActive, changeDesc, setDesc, changeImg, setChangeImg}) => {
+
     const [previewImage, setPreviewImage] = useState<File | string | null>(null)
 
     const previewImageInputRef = useRef<HTMLInputElement>(null)
@@ -31,10 +33,6 @@ const ModWindow: React.FC<modal> = ({active, setActive, secondActive, setSecondA
     const [description, setDescription] = useState('')
     
     const dispatch = useAppDispatch()
-
-    const userId = user._id
-
-    let postId: string
     
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files
@@ -48,11 +46,11 @@ const ModWindow: React.FC<modal> = ({active, setActive, secondActive, setSecondA
         }
     }
 
-    const inputHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => (
-        setInputLength(e.target.value.length),
-        setDescription(e.target.value),
+    const inputHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setInputLength(e.target.value.length)
+        setDescription(e.target.value)
         setDesc(e.target.value)
-    )
+    }
     const changeFirstStap = () => {
         setActive(true)
         setSecondActive(false)
@@ -64,18 +62,19 @@ const ModWindow: React.FC<modal> = ({active, setActive, secondActive, setSecondA
     }
 
     const addClick = () => {
-        if (changeDesc) {
+        if (changeImg) {
             posts.filter(i => {
-                if (i.user._id === userId) {
-                    postId = i.user._id
-                    dispatch(editPost({postId}))
+                if (i.user._id === user._id) {
+                    const postId = i._id
+                    const description = changeDesc
+                    dispatch(editPost({postId, description}))
                 }
             })
-            
-        } else {
-            dispatch(addPosts({description, image}))
         }
         setSecondActive(false)
+        dispatch(addPosts({description, image}))
+        setDesc('')
+        setDescription('')
     }
     
     return (
@@ -121,16 +120,15 @@ const ModWindow: React.FC<modal> = ({active, setActive, secondActive, setSecondA
                     <hr />
                     <div className="main">
                         <div className="img-block">
-                            <img className={change ? 'prev-none': 'prev'} src={previewImage as string} alt="error" />
-                            <img className={!change ? 'prev-none' : 'prev'} src={change} alt="error" />
+                            <img className={changeImg ? 'prev-none' : 'prev'} src={previewImage as string} alt="error" />
+                            <img className={changeImg ? 'prev' : 'prev-none'} src={changeImg} alt="error" />
                         </div>
                         <div className="main-items">
                             <div className="ava">
                                 <img src={Ava} alt="error" />
                                 <p className="username">{user.username}</p>
                             </div>
-                            <input className={changeDesc ? 'input-none' : 'text-input'} placeholder="Добавить подпись..." onChange={inputHandleChange} type="text" maxLength={2200}/>
-                            <input className={changeDesc ? 'text-input' : 'input-none'} value={changeDesc} onChange={inputHandleChange} type="text" maxLength={2200}/>
+                            <input className='text-input' defaultValue={changeDesc} placeholder="Добавить подпись..." onChange={inputHandleChange} type="text" maxLength={2200}/>
                             <div className="main-footer">
                                 <div className="main-footer-img">
                                     <img src={Emodjis} alt="error" />
